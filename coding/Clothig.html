@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clothify - Online Clothing Store</title>
+  <style>
+    :root {
+      --primary: #e91e63;
+      --secondary: #555;
+      --success: #4caf50;
+      --light: #f8f8f8;
+      --dark: #333;
+      --radius: 8px;
+      --transition: 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .search-bar {
+      margin: 1.5rem auto;
+      max-width: 600px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 1rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 1rem;
+      text-align: center;
+      transition: transform var(--transition);
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      border-radius: var(--radius);
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .product-card h3 {
+      margin: 0.7rem 0 0.3rem;
+    }
+
+    .product-card p {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: var(--success);
+      color: white;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .product-card button:hover {
+      background: #388e3c;
+    }
+
+    .cart-info {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--dark);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      z-index: 100;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 2rem;
+      width: 300px;
+      border-radius: var(--radius);
+      position: relative;
+    }
+
+    .modal-content input {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+    }
+
+    .modal-content button {
+      margin-top: 1rem;
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #c2185b;
+    }
+
+    .close {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cart-info">🛒 Cart: <span id="cart-count">0</span></div>
+
+  <header>
+    <h1>Clothify</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#" onclick="openLogin()">Login</a>
+    </nav>
+  </header>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search clothing..." oninput="filterProducts()">
+  </div>
+
+  <main class="products" id="product-list">
+    <div class="product-card" data-name="T-shirt">
+      <img src="https://via.placeholder.com/300x200?text=T-shirt" alt="T-shirt">
+      <h3>Classic T-Shirt</h3>
+      <p>$20.00</p>
+      <button onclick="addToCart('Classic T-Shirt')">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Hoodie">
+      <img src="https://via.placeholder.com/300x200?text=Hoodie" alt="Hoodie">
+      <h3>Warm Hoodie</h3>
+      <p>$45.00</p>
+      <button onclick="addToCart('Warm Hoodie')">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Dress">
+      <img src="https://via.placeholder.com/300x200?text=Dress" alt="Dress">
+      <h3>Summer Dress</h3>
+      <p>$35.00</p>
+      <button onclick="addToCart('Summer Dress')">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Jeans">
+      <img src="https://via.placeholder.com/300x200?text=Jeans" alt="Jeans">
+      <h3>Blue Jeans</h3>
+      <p>$40.00</p>
+      <button onclick="addToCart('Blue Jeans')">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Jacket">
+      <img src="https://via.placeholder.com/300x200?text=Jacket" alt="Jacket">
+      <h3>Leather Jacket</h3>
+      <p>$70.00</p>
+      <button onclick="addToCart('Leather Jacket')">Add to Cart</button>
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeLogin()">&times;</span>
+      <h2>Login</h2>
+      <input type="text" placeholder="Username" id="username"/>
+      <input type="password" placeholder="Password" id="password"/>
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <script>
+    let cartCount = 0;
+
+    function addToCart(productName) {
+      cartCount++;
+      document.getElementById("cart-count").textContent = cartCount;
+      alert(productName + " added to cart!");
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const products = document.querySelectorAll('.product-card');
+      products.forEach(product => {
+        const name = product.getAttribute('data-name').toLowerCase();
+        product.style.display = name.includes(query) ? '' : 'none';
+      });
+    }
+
+    function openLogin() {
+      document.getElementById('loginModal').style.display = 'block';
+    }
+
+    function closeLogin() {
+      document.getElementById('loginModal').style.display = 'none';
+    }
+
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value
